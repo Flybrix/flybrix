@@ -1,0 +1,47 @@
+export { Serializer } from './serializer.js';
+export {
+  Handler,
+  handlers,
+  u8,
+  u16,
+  u32,
+  i8,
+  i16,
+  i32,
+  f32,
+  f64,
+  bool,
+  voidHandler,
+  s,
+  string,
+  arrayUnmasked,
+  arrayMasked,
+  tupleUnmasked,
+  tupleMasked,
+  mapUnmasked,
+  mapMasked,
+  type HandlerLibrary,
+  type MapChild,
+  type MaskSpec,
+} from './handlers.js';
+export {
+  parse,
+  tokenizer,
+  lexer,
+  parser,
+  StringToken,
+  Token,
+  TokenCategory,
+  Type,
+  TypeCategory,
+  type Structure,
+} from './parser.js';
+export { descriptorFiles, descriptorVersions } from './descriptors.js';
+export {
+  getHandlersForVersion,
+  newestDescriptorVersion,
+  supportedDescriptorVersions,
+  versionKey,
+  type ProtocolVersion,
+  type VersionInput,
+} from './versions.js';
