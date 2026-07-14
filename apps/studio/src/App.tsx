@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { listPorts, TauriSerialTransport } from "./transport/tauriSerial";
+import { listPorts } from "./transport/tauriSerial";
 import { TEENSY_VID, type PortInfo } from "./transport/Transport";
+import { Device } from "./device";
 import "./App.css";
 
 const SCREENS = [
@@ -18,8 +19,10 @@ function App() {
   const [screen, setScreen] = useState<Screen>("Connect");
   const [ports, setPorts] = useState<PortInfo[]>([]);
   const [status, setStatus] = useState("disconnected");
+  const [firmware, setFirmware] = useState<string | null>(null);
+  const [counts, setCounts] = useState<Record<string, number>>({});
   const [log, setLog] = useState<string[]>([]);
-  const transport = useRef<TauriSerialTransport | null>(null);
+  const device = useRef<Device | null>(null);
 
   const appendLog = useCallback((line: string) => {
     setLog((l) => [...l.slice(-200), line]);
@@ -38,26 +41,33 @@ function App() {
   }, [refreshPorts]);
 
   const connect = async (path: string) => {
+    const dev = new Device({
+      onReceive: (type) => {
+        setCounts((c) => ({ ...c, [type]: (c[type] ?? 0) + 1 }));
+        if (device.current) setFirmware(device.current.firmwareKey());
+      },
+      onLog: appendLog,
+      onDisconnect: () => {
+        setStatus("disconnected");
+        setFirmware(null);
+      },
+    });
     try {
-      transport.current = await TauriSerialTransport.open(
-        path,
-        (data) => appendLog(`rx ${data.length} bytes`),
-        (msg) => {
-          appendLog(`error: ${msg}`);
-          setStatus("disconnected");
-        },
-      );
+      await dev.connect(path);
+      device.current = dev;
       setStatus(`connected: ${path}`);
-      appendLog(`opened ${path}`);
+      setFirmware(dev.firmwareKey());
+      appendLog(`opened ${path}; requested firmware version`);
     } catch (err) {
       appendLog(`connect failed: ${err}`);
     }
   };
 
   const disconnect = async () => {
-    await transport.current?.close();
-    transport.current = null;
+    await device.current?.disconnect();
+    device.current = null;
     setStatus("disconnected");
+    setFirmware(null);
   };
 
   return (
@@ -73,7 +83,10 @@ function App() {
             {s}
           </button>
         ))}
-        <div className="status">{status}</div>
+        <div className="status">
+          {status}
+          {firmware && <div>firmware {firmware}</div>}
+        </div>
       </nav>
       <main>
         {screen === "Connect" ? (
@@ -91,7 +104,20 @@ function App() {
               {ports.length === 0 && <li>No serial ports found.</li>}
             </ul>
             {status !== "disconnected" && (
-              <button onClick={disconnect}>Disconnect</button>
+              <>
+                <button onClick={disconnect}>Disconnect</button>
+                <h3>Messages received</h3>
+                <ul>
+                  {Object.entries(counts).map(([type, n]) => (
+                    <li key={type}>
+                      {type}: {n}
+                    </li>
+                  ))}
+                  {Object.keys(counts).length === 0 && (
+                    <li>none yet — waiting for board telemetry</li>
+                  )}
+                </ul>
+              </>
             )}
           </section>
         ) : (
