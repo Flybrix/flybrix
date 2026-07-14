@@ -4,7 +4,7 @@
  * firmware-version negotiation. UI code subscribes via onReceive/onLog.
  */
 import { SerialRouter, type MessageTypeName } from "@flybrix/core";
-import { TauriSerialTransport } from "./transport/tauriSerial";
+import type { DataListener, Transport } from "./transport/Transport";
 
 export interface DeviceHandlers {
   onReceive: (type: MessageTypeName, message: unknown) => void;
@@ -12,9 +12,18 @@ export interface DeviceHandlers {
   onDisconnect: () => void;
 }
 
+/**
+ * Opens a concrete transport, wiring the given data/error callbacks. Lets the
+ * Device stay agnostic to USB serial vs BLE — the caller supplies whichever.
+ */
+export type TransportOpener = (
+  onData: DataListener,
+  onError: (msg: string) => void,
+) => Promise<Transport>;
+
 export class Device {
   readonly router = new SerialRouter({ log: (m) => this.handlers.onLog(m) });
-  private transport: TauriSerialTransport | null = null;
+  private transport: Transport | null = null;
 
   constructor(private handlers: DeviceHandlers) {
     this.router.addOnReceiveCallback((type, message) =>
@@ -22,9 +31,8 @@ export class Device {
     );
   }
 
-  async connect(path: string): Promise<void> {
-    const transport = await TauriSerialTransport.open(
-      path,
+  async connect(open: TransportOpener): Promise<void> {
+    const transport = await open(
       (data) => this.router.onRead(data),
       (msg) => {
         this.handlers.onLog(`transport error: ${msg}`);

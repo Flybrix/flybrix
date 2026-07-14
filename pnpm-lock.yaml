@@ -13,6 +13,9 @@ importers:
       '@flybrix/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@mnlphlp/plugin-blec':
+        specifier: ^0.12.0
+        version: 0.12.0
       '@tauri-apps/api':
         specifier: ^2
         version: 2.11.1
@@ -326,6 +329,9 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
+
+  '@mnlphlp/plugin-blec@0.12.0':
+    resolution: {integrity: sha512-+PvGNfGh7ctRhVnsIXgLl0EnLg9ZkRC9BBQ3j0cHKsdDQEYzoVQBgct+2XUrsMlrREioOvIRvKFbBiPhVgVLzQ==}
 
   '@rolldown/pluginutils@1.0.0-beta.27':
     resolution: {integrity: sha512-+d0F4MKMCbeVUJwG96uQ4SgAznZNSq93I3V+9NHA4OpvqG8mRCpGdKmK8l/dl02h2CCDHwW2FqilnTyDcAnqjA==}
@@ -1128,6 +1134,10 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
+
+  '@mnlphlp/plugin-blec@0.12.0':
+    dependencies:
+      '@tauri-apps/api': 2.11.1
 
   '@rolldown/pluginutils@1.0.0-beta.27': {}
 

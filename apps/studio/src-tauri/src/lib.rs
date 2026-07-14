@@ -4,6 +4,7 @@ mod serial;
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
+        .plugin(tauri_plugin_blec::init())
         .manage(serial::SerialState::default())
         .invoke_handler(tauri::generate_handler![
             serial::serial_list_ports,

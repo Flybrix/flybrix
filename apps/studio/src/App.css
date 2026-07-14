@@ -60,16 +60,34 @@ main {
   gap: 1rem;
 }
 
-.ports {
+.transport-picker {
+  display: flex;
+  gap: 1.2rem;
+  margin-bottom: 0.8rem;
+}
+
+.transport-picker label {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
+}
+
+.devices {
   list-style: none;
   padding: 0;
 }
 
-.ports li {
+.devices li {
   display: flex;
   align-items: center;
   gap: 0.6rem;
   padding: 0.4rem 0;
+}
+
+.rssi {
+  opacity: 0.6;
+  font-size: 0.8rem;
 }
 
 .log {

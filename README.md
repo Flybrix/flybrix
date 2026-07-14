@@ -30,9 +30,9 @@ repo is a fresh start and does not carry their git history.
 
 | Platform | USB serial | BLE |
 |---|---|---|
-| Desktop (Win/macOS/Linux) | ✅ Rust `serialport` | ✅ planned (`blec`) |
-| Android | — | ✅ planned (`blec`) |
-| iOS | — (no MFi) | ✅ planned (`blec`) |
+| Desktop (Win/macOS/Linux) | ✅ Rust `serialport` | ✅ `tauri-plugin-blec` (built; needs hardware test) |
+| Android | — | ✅ `blec` (built; not yet configured/tested) |
+| iOS | — (no MFi) | ✅ `blec` (built; not yet configured/tested) |
 
 Firmware flashing is a desktop-USB-only capability. iOS/Android are BLE-only.
 
