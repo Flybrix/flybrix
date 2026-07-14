@@ -1,10 +1,11 @@
 {
-  "name": "flybrix-studio",
+  "name": "flybrix",
   "private": true,
   "version": "0.1.0",
-  "description": "Unified Flybrix configuration + flight app (React + Vite + Tauri 2)",
+  "description": "Flybrix modernization monorepo: firmware, shared protocol libraries, and the unified React+Vite+Tauri app",
   "scripts": {
     "test": "pnpm -r test",
-    "build": "pnpm -r build"
+    "build": "pnpm -r build",
+    "firmware:build": "pio run -d firmware"
   }
 }
