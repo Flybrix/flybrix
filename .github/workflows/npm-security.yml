@@ -1,0 +1,26 @@
+name: JavaScript dependency security
+on:
+  pull_request:
+  push:
+    branches: [master]
+permissions:
+  contents: read
+jobs:
+  workspace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 26.12.1
+      - name: Install pinned pnpm
+        run: npm install --global pnpm@12.15.0
+      - name: Install the locked workspace
+        run: pnpm install --frozen-lockfile
+      - name: Build TypeScript packages and Studio
+        run: pnpm build
+      - name: Test the workspace
+        run: pnpm test
+      - name: Audit all dependencies
+        run: pnpm audit
